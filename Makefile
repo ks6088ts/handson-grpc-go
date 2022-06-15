@@ -63,10 +63,16 @@ lint: ## lint
 test: ## run tests
 	go test -cover -v ./...
 
+.PHONY: test-run
+test-run: ## tests for running cli
+	./dist/handson-grpc-go --help
+	./dist/handson-grpc-go helloworld --help
+	./dist/handson-grpc-go helloworld server --help
+	./dist/handson-grpc-go helloworld client --help
+
 .PHONY: build
 build: ## build
 	$(GOBUILD) -ldflags=$(LDFLAGS) -o dist/handson-grpc-go .
 
 .PHONY: ci-test
-ci-test: install-deps-dev lint test build ## run ci tests
-	./dist/handson-grpc-go
+ci-test: install-deps-dev lint test build test-run ## run ci tests

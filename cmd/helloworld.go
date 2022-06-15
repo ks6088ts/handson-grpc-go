@@ -1,5 +1,4 @@
-The MIT License (MIT)
-
+/*
 Copyright © 2022 ks6088ts
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,3 +18,22 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+*/
+package cmd
+
+import (
+	"github.com/spf13/cobra"
+)
+
+// helloworldCmd represents the helloworld command
+var helloworldCmd = &cobra.Command{
+	Use:   "helloworld",
+	Short: "helloworld",
+	Long:  `helloworld`,
+	Run: func(cmd *cobra.Command, args []string) {
+	},
+}
+
+func init() {
+	rootCmd.AddCommand(helloworldCmd)
+}
