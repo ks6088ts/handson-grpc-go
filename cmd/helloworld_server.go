@@ -23,7 +23,6 @@ package cmd
 
 import (
 	"context"
-	"flag"
 	"fmt"
 	"log"
 	"net"
@@ -31,10 +30,6 @@ import (
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc"
 	pb "google.golang.org/grpc/examples/helloworld/helloworld"
-)
-
-var (
-	helloworldServerPort = flag.Int("port", 50051, "The server port")
 )
 
 // helloWorldServer is used to implement helloworld.GreeterServer.
@@ -48,19 +43,18 @@ func (s *helloWorldServer) SayHello(ctx context.Context, in *pb.HelloRequest) (*
 	return &pb.HelloReply{Message: "Hello " + in.GetName()}, nil
 }
 
-// serverCmd represents the server command
-var serverCmd = &cobra.Command{
+// helloworldServerCmd represents the server command
+var helloworldServerCmd = &cobra.Command{
 	Use:   "server",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "run greeter server",
+	Long:  `run greeter server`,
 	Run: func(cmd *cobra.Command, args []string) {
-		flag.Parse()
-		lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *helloworldServerPort))
+		port, err := cmd.Flags().GetInt("port")
+		if err != nil {
+			log.Fatalf("failed to parse `port`: %v", err)
+		}
+
+		lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
 		if err != nil {
 			log.Fatalf("failed to listen: %v", err)
 		}
@@ -74,15 +68,7 @@ to quickly create a Cobra application.`,
 }
 
 func init() {
-	helloworldCmd.AddCommand(serverCmd)
+	helloworldCmd.AddCommand(helloworldServerCmd)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// serverCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// serverCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	helloworldServerCmd.Flags().IntP("port", "p", 50051, "server port number")
 }

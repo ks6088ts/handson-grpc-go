@@ -23,7 +23,6 @@ package cmd
 
 import (
 	"context"
-	"flag"
 	"log"
 	"time"
 
@@ -33,29 +32,23 @@ import (
 	pb "google.golang.org/grpc/examples/helloworld/helloworld"
 )
 
-const (
-	helloworldClientDefaultName = "world"
-)
-
-var (
-	helloworldClientAddr = flag.String("addr", "localhost:50051", "the address to connect to")
-	helloworldClientName = flag.String("name", helloworldClientDefaultName, "Name to greet")
-)
-
-// clientCmd represents the client command
-var clientCmd = &cobra.Command{
+// helloworldClientCmd represents the client command
+var helloworldClientCmd = &cobra.Command{
 	Use:   "client",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "run greeter client",
+	Long:  `run greeter client`,
 	Run: func(cmd *cobra.Command, args []string) {
-		flag.Parse()
+		addr, err := cmd.Flags().GetString("addr")
+		if err != nil {
+			log.Fatalf("failed to parse `addr`: %v", err)
+		}
+		name, err := cmd.Flags().GetString("name")
+		if err != nil {
+			log.Fatalf("failed to parse `name`: %v", err)
+		}
+
 		// Set up a connection to the server.
-		conn, err := grpc.Dial(*helloworldClientAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+		conn, err := grpc.Dial(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 		if err != nil {
 			log.Fatalf("did not connect: %v", err)
 		}
@@ -65,7 +58,7 @@ to quickly create a Cobra application.`,
 		// Contact the server and print out its response.
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 		defer cancel()
-		r, err := c.SayHello(ctx, &pb.HelloRequest{Name: *helloworldClientName})
+		r, err := c.SayHello(ctx, &pb.HelloRequest{Name: name})
 		if err != nil {
 			log.Fatalf("could not greet: %v", err)
 		}
@@ -74,15 +67,8 @@ to quickly create a Cobra application.`,
 }
 
 func init() {
-	helloworldCmd.AddCommand(clientCmd)
+	helloworldCmd.AddCommand(helloworldClientCmd)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// clientCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// clientCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	helloworldClientCmd.Flags().StringP("addr", "a", "localhost:50051", "the address to connect to")
+	helloworldClientCmd.Flags().StringP("name", "n", "world", "Name to greet")
 }
