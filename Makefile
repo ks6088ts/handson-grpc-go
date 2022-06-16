@@ -67,9 +67,9 @@ test: ## run tests
 .PHONY: test-run
 test-run: ## tests for running cli
 	./dist/handson-grpc-go --help
-	./dist/handson-grpc-go helloworld --help
-	./dist/handson-grpc-go helloworld server --help
-	./dist/handson-grpc-go helloworld client --help
+	./dist/handson-grpc-go sensor --help
+	./dist/handson-grpc-go sensor server --help
+	./dist/handson-grpc-go sensor client --help
 
 .PHONY: build
 build: ## build
