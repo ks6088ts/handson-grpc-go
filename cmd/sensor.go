@@ -22,36 +22,18 @@ THE SOFTWARE.
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
 // sensorCmd represents the sensor command
 var sensorCmd = &cobra.Command{
 	Use:   "sensor",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "sensor",
+	Long:  `sensor`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("sensor called")
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(sensorCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// sensorCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// sensorCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

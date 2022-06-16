@@ -22,36 +22,30 @@ THE SOFTWARE.
 package cmd
 
 import (
-	"fmt"
+	"log"
 
+	"github.com/ks6088ts/handson-grpc-go/services/sensor/server"
 	"github.com/spf13/cobra"
 )
 
-// serverCmd represents the server command
-var serverCmd = &cobra.Command{
+// sensorServerCmd represents the server command
+var sensorServerCmd = &cobra.Command{
 	Use:   "server",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "run sensor server",
+	Long:  `run sensor server`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("server called")
+		port, err := cmd.Flags().GetInt("port")
+		if err != nil {
+			log.Fatalf("failed to parse `port`: %v", err)
+		}
+
+		log.Println("run sensor server")
+		server.Serve(port)
 	},
 }
 
 func init() {
-	sensorCmd.AddCommand(serverCmd)
+	sensorCmd.AddCommand(sensorServerCmd)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// serverCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// serverCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	sensorServerCmd.Flags().IntP("port", "p", 50051, "server port number")
 }

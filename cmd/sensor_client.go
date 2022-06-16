@@ -22,36 +22,49 @@ THE SOFTWARE.
 package cmd
 
 import (
-	"fmt"
+	"log"
+
+	"github.com/ks6088ts/handson-grpc-go/services/sensor/client"
 
 	"github.com/spf13/cobra"
 )
 
-// clientCmd represents the client command
-var clientCmd = &cobra.Command{
+// sensorClientCmd represents the client command
+var sensorClientCmd = &cobra.Command{
 	Use:   "client",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "run sensor client",
+	Long:  `run sensor client`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("client called")
+		addr, err := cmd.Flags().GetString("addr")
+		if err != nil {
+			log.Fatalf("failed to parse `addr`: %v", err)
+		}
+
+		client, err := client.NewSensorClient(addr)
+		if err != nil {
+			log.Fatalf("fail to create client: %v", err)
+		}
+
+		// GetSensorState
+		state, err := client.GetSensorState()
+		if err != nil {
+			log.Fatalf("client.GetSensorState failed: %v", err)
+		}
+		log.Printf("state: %v", state)
+
+		// GetSensorStates
+		states, err := client.GetSensorStates()
+		if err != nil {
+			log.Fatalf("client.GetSensorState failed: %v", err)
+		}
+		for idx, state := range states {
+			log.Printf("state[%v] = %v", idx, state)
+		}
 	},
 }
 
 func init() {
-	sensorCmd.AddCommand(clientCmd)
+	sensorCmd.AddCommand(sensorClientCmd)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// clientCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// clientCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	sensorClientCmd.Flags().StringP("addr", "a", "localhost:50051", "the address to connect to")
 }
