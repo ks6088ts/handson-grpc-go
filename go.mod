@@ -5,7 +5,6 @@ go 1.17
 require (
 	github.com/spf13/cobra v1.4.0
 	google.golang.org/grpc v1.47.0
-	google.golang.org/grpc/examples v0.0.0-20220614223236-71f16a1d4afa
 	google.golang.org/protobuf v1.27.1
 )
 
