@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option go_package = "github.com/ks6088ts/handson-grpc-go/services/sensor/sensor";
+
+package sensor;
+
+service Sensor {
+  rpc GetSensorState(DummyRequest) returns (SensorState) {}
+  rpc GetSensorStates(DummyRequest) returns (stream SensorState) {}
+}
+
+message DummyRequest {
+}
+
+message SensorState {
+  double x = 1;
+  double y = 2;
+  double z = 3;
+}

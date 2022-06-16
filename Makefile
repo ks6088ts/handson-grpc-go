@@ -10,6 +10,7 @@ LDFLAGS ?= '-s -w \
 	-X "github.com/ks6088ts/handson-grpc-go/internal.Revision=$(shell git rev-parse --short HEAD)" \
 	-X "github.com/ks6088ts/handson-grpc-go/internal.Version=$(shell git describe --tags $$(git rev-list --tags --max-count=1))" \
 '
+PROTO_FILE ?= services/sensor/sensor/sensor.proto
 
 .PHONY: help
 help:
@@ -49,7 +50,7 @@ generate-grpc-go: ## generate gRPC code in Go
 		--go_out=. \
 		--go_opt=paths=source_relative \
 		--go-grpc_out=. --go-grpc_opt=paths=source_relative \
-		examples/helloworld/helloworld/helloworld.proto
+		$(PROTO_FILE)
 
 .PHONY: format
 format: ## format codes
